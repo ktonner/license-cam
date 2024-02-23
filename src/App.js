@@ -1,23 +1,39 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import WebcamComponent from './WebCam';
+import OcrComponent from './OCR';
 
 function App() {
+  const [capturedImage, setCapturedImage] = useState(null);
+  const [ocrResult, setOcrResult] = useState('');
+
+  const handleCapture = (imageSrc) => {
+    setCapturedImage(imageSrc);
+  };
+
+  const handleOcrComplete = (result) => {
+    setOcrResult(result);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+<p>Capture an image of your license</p>
+<WebcamComponent onCapture={handleCapture}/>
+{capturedImage && (
+        <div>
+          <img src={capturedImage} alt="Captured" />
+          <OcrComponent imageSrc={capturedImage} onOcrComplete={handleOcrComplete} />
+        </div>
+      )}
+      {ocrResult && (
+        <div>
+          <h3>OCR Result:</h3>
+          <p>{ocrResult}</p>
+        </div>
+      )}
       </header>
+
     </div>
   );
 }
